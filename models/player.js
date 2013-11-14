@@ -11,6 +11,7 @@ var Player = mongoose.Schema({
   socketId:  String,
   x:         {type: Number, default: randomize},
   y:         {type: Number, default: randomize},
+  isZombie:  {type: Boolean, default: false},
   health:    {type: Number, default: 100},
   createdAt: {type: Date, default: Date.now}
 });
