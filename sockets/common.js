@@ -10,6 +10,7 @@ exports.connection = function(socket){
   socket.on('startgame', socketStartGame);
   socket.on('playermoved', socketPlayerMoved);
   socket.on('attack', socketAttack);
+  socket.on('zombieAttack', socketZombieAttack);
 };
 
 function socketStartGame(data){
@@ -51,7 +52,16 @@ function socketAttack(data) {
     function(player,fn){m.findGame(data.game,fn);},
     function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
   ]);
+}
 
+function socketZombieAttack(data){
+  console.log(data);
+  async.waterfall([
+    function(fn){m.findPlayer(data.prey,fn);},
+    function(player,fn){m.takeZombieHit(player,fn);},
+    function(player,fn){m.findGame(data.game,fn);},
+    function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
+  ]);
 }
 
 function socketDisconnect(data){
