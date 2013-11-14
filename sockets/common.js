@@ -66,6 +66,14 @@ function socketZombieAttack(data){
     function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
   ]);
 }
+function drinkPotion(){
+  // var potion = __.where(game.potions, {'x': x, 'y': y});
+  // var strength = potion.strength;
+  // player.health += strength;
+  // player.save();
+  // potions.splice(potion);
+  // game.save();
+}
 
 function socketDisconnect(data){
   console.log(data);

@@ -1,6 +1,6 @@
 /* global _, getValue, document, window, io */
 var __ = require('lodash');
-
+var mongoose = require('mongoose');
 
 $(document).ready(initialize);
 
@@ -79,15 +79,11 @@ function keypressMove(e) {
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
        }
     }
-    //var x and y are already stated above
 
-
-    // need to search the potions array for a potion with the same x&y,
-    // grab it's strength
-    // apply it's strength to player;
-    // save the player
-    // delete the potion
-    // save the game state
+    if($('.cell').hasClass('potion') && $('.cell').data('x') == x && $('.cell').data('y') == y)){
+      socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
+      alert('the potion condition works!');
+    }
   }
 }
 
