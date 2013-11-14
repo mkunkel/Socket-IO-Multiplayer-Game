@@ -12,6 +12,7 @@ exports.connection = function(socket){
   socket.on('attack', socketAttack);
   socket.on('zombieAttack', socketZombieAttack);
   socket.on('buildwall', socketBuildWall);
+  socket.on('attackwall', socketAttackWall);
 };
 
 function socketStartGame(data){

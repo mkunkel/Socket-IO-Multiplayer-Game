@@ -1,7 +1,5 @@
 /* global _, getValue, document, alert, window, io */
 
-var mongoose = require('mongoose');
-
 $(document).ready(initialize);
 
 var socket;
