@@ -16,6 +16,9 @@ function socketStartGame(data){
   var storage = {};
   var socket = this;
 
+
+
+
   async.waterfall([
     function(fn){m.findGame(data.game,fn);},
     function(game,fn){if(!game){m.newGame(data.game,fn);}else{fn(null,game);}},

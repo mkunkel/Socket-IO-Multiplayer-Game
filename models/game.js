@@ -1,4 +1,5 @@
 var mongoose = require('mongoose');
+var __ = require('lodash');
 
 var Game = mongoose.Schema({
   name:      String,
@@ -7,6 +8,11 @@ var Game = mongoose.Schema({
   potions:   [{}],
   createdAt: {type: Date, default: Date.now}
 });
+
+
+function randomize() {
+  return __.sample(__.range(10));
+}
 
 Game.pre('save', function(next){
   if(!this.walls.length) {
@@ -21,10 +27,14 @@ Game.pre('save', function(next){
         wall.down = 0;
       }
     }
-
-
-
-  }
+    setInterval(function(){
+      potion = {};
+      potion.x = randomize();
+      potion.y = randomize();
+      potion.strength = randomize();
+      this.potions.push(potion);
+    },30000);
+    }
   next();
 }
 
