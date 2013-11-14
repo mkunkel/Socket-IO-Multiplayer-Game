@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 var __ = require('lodash');
 
 function randomize() {
-  return __.sample(__.range(10));
+  return (__.sample(__.range(10)))-1;
 }
 
 var Player = mongoose.Schema({
