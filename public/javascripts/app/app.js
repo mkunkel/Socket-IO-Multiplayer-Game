@@ -8,6 +8,7 @@ var socket;
 var player;
 var color;
 var game;
+var players = [];
 
 function initialize(){
   $(document).foundation();
@@ -17,8 +18,10 @@ function initialize(){
 }
 
 function keypressMove(e) {
+
   // console.log(e);
-  var isArrow = _.any([37, 38, 39, 40], function(i){return i === e.which});
+  var isArrow = _.any([37, 38, 39, 40], function(i){return i === e.which;});
+
   if(isArrow) {
     var $td = $('.player:contains(' + player + ')').closest('td');
     var x = $td.data('x');
@@ -67,9 +70,14 @@ function keypressMove(e) {
   } else if($('#board:visible').length && e.which !== 32) {
 
     var prey = findPrey();
+    var attacker = findPlayer();
     for(var i = 0; i < prey.length; i++) {
       var thisPrey = prey[i];
-      socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
+      if(attacker.isZombie){
+        socket.emit('zombieAttack', {game:game, attacker: player, prey: thisPrey});
+      }else{
+        socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
+       }
     }
   }
 }
@@ -81,6 +89,9 @@ function findPrey(){
   return prey;
 }
 
+function findPlayer(){
+  return _.find(players, function(p){return p.name === player;});
+}
 
 function clickStart() {
   player = getValue('#player');
@@ -109,6 +120,7 @@ function socketConnected(data){
 
 function socketPlayerJoined(data) {
   // console.log('received');
+  players = data.players;
   $('td').empty();
   for(var i = 0; i < data.players.length; i++) {
     if(data.players[i].health > 0) {
@@ -117,6 +129,16 @@ function socketPlayerJoined(data) {
       var $td = $('td[data-x=' + x + '][data-y=' + y + ']');
       var $player = $('<div>').addClass('player');
       $player.css('background-color', data.players[i].color);
+      $player.text(data.players[i].name);
+      var $outerHealth = $('<div>').addClass('outerHealth');
+      $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
+      $player.append($outerHealth).appendTo($td);
+    } else{
+      var x = data.players[i].x;
+      var y = data.players[i].y;
+      var $td = $('td[data-x=' + x + '][data-y=' + y + ']');
+      var $player = $('<div>').addClass('player');
+      $player.css('background-color', 'grey');
       $player.text(data.players[i].name);
       var $outerHealth = $('<div>').addClass('outerHealth');
       $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
