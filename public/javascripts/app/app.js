@@ -74,6 +74,7 @@ function keypressMove(e) {
     for(var i = 0; i < prey.length; i++) {
       var thisPrey = prey[i];
       if(attacker.isZombie){
+        alert('Zombie Attack!');
         socket.emit('zombieAttack', {game:game, attacker: player, prey: thisPrey});
       }else{
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
