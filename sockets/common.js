@@ -83,6 +83,14 @@ function socketAttackWall(data) {
     function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
+function drinkPotion(){
+  // var potion = __.where(game.potions, {'x': x, 'y': y});
+  // var strength = potion.strength;
+  // player.health += strength;
+  // player.save();
+  // potions.splice(potion);
+  // game.save();
+}
 
 function socketDisconnect(data){
   console.log(data);

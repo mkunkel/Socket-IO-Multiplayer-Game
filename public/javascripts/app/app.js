@@ -1,6 +1,6 @@
 /* global _, getValue, document, window, io */
-
-
+var __ = require('lodash');
+var mongoose = require('mongoose');
 
 $(document).ready(initialize);
 
@@ -78,6 +78,11 @@ function keypressMove(e) {
       }else{
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
        }
+    }
+
+    if($('.cell').hasClass('potion') && $('.cell').data('x') == x && $('.cell').data('y') == y)){
+      socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
+      alert('the potion condition works!');
     }
   }
 }
