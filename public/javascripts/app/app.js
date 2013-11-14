@@ -1,5 +1,5 @@
 /* global _, getValue, document, window, io */
-
+var __ = require('lodash');
 
 
 $(document).ready(initialize);
@@ -50,6 +50,15 @@ function keypressMove(e) {
       var thisPrey = prey[i];
       socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
     }
+    //var x and y are already stated above
+
+
+    // need to search the potions array for a potion with the same x&y,
+    // grab it's strength
+    // apply it's strength to player;
+    // save the player
+    // delete the potion
+    // save the game state
   }
 }
 
