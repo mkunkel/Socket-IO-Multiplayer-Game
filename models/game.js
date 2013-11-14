@@ -28,14 +28,15 @@ Game.pre('save', function(next){
         this.walls.push(wall);
       }
     }
+    var game = this;
     setInterval(function(){
       potion = {};
       potion.x = randomize();
       potion.y = randomize();
       potion.strength = randomize();
-      this.potions.push(potion);
+      game.potions.push(potion);
     },30000);
-    }
+  }
   next();
 });
 

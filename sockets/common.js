@@ -11,14 +11,13 @@ exports.connection = function(socket){
   socket.on('playermoved', socketPlayerMoved);
   socket.on('attack', socketAttack);
   socket.on('zombieAttack', socketZombieAttack);
+  socket.on('buildwall', socketBuildWall);
+  socket.on('attackwall', socketAttackWall);
 };
 
 function socketStartGame(data){
   var storage = {};
   var socket = this;
-
-
-
 
   async.waterfall([
     function(fn){m.findGame(data.game,fn);},
@@ -31,7 +30,7 @@ function socketStartGame(data){
     function(fn){fn(null,__.any(storage.game.players,function(p){return p.id===storage.player.id;}));},
     function(isFound,fn){if(!isFound){m.attachPlayer(storage.game,storage.player,fn);}else{fn(null,storage.game);}},
     function(game,fn){m.findGame(data.game,fn);},
-    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions,fn);}
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
 
@@ -42,7 +41,7 @@ function socketPlayerMoved(data){
     function(fn){m.findPlayer(data.player,fn);},
     function(player,fn){m.updateCoordinates(player,data.x,data.y,fn);},
     function(player,fn){m.findGame(data.game,fn);},
-    function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
 
@@ -63,8 +62,33 @@ function socketZombieAttack(data){
     function(fn){m.findPlayer(data.prey,fn);},
     function(player,fn){m.takeZombieHit(player,fn);},
     function(player,fn){m.findGame(data.game,fn);},
-    function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
+}
+
+function socketBuildWall(data) {
+  async.waterfall([
+    function(fn){m.findGame(data.game,fn);},
+    function(game, fn){m.buildWall(game, data.x, data.y, data.direction,fn);},
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
+  ]);
+}
+
+function socketAttackWall(data) {
+  async.waterfall([
+    function(fn){m.findGame(data.game,fn);},
+    function(game,fn){m.attackWall(game, data.x, data.y, data.direction,fn);},
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
+  ]);
+}
+function drinkPotion(game, player, x, y){
+  var potion = __.where(game.potions, {'x': x, 'y': y});
+  var strength = potion.strength;
+  player.health += strength;
+  player.save();
+  potions.splice(potion);
+  game.markModified('potions');
+  game.save();
 }
 
 function socketDisconnect(data){
