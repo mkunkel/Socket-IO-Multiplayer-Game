@@ -1,5 +1,5 @@
-/* global _, getValue, document, window, io */
-var __ = require('lodash');
+/* global _, getValue, document, alert, window, io */
+
 var mongoose = require('mongoose');
 
 $(document).ready(initialize);
@@ -21,11 +21,12 @@ function keypressMove(e) {
 
   // console.log(e);
   var isArrow = _.any([37, 38, 39, 40], function(i){return i === e.which;});
-
+  var x;
+  var y;
   if(isArrow) {
     var $td = $('.player:contains(' + player + ')').closest('td');
-    var x = $td.data('x');
-    var y = $td.data('y');
+    x = $td.data('x');
+    y = $td.data('y');
     var direction;
 
     switch(e.which) {
@@ -77,10 +78,10 @@ function keypressMove(e) {
         socket.emit('zombieAttack', {game:game, attacker: player, prey: thisPrey});
       }else{
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
-       }
+      }
     }
 
-    if($('.cell').hasClass('potion') && $('.cell').data('x') == x && $('.cell').data('y') == y)){
+    if($('.cell').hasClass('potion') && $('.cell').data('x') === x && $('.cell').data('y') === y){
       socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
       alert('the potion condition works!');
     }
