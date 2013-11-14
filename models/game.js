@@ -16,8 +16,8 @@ function randomize() {
 
 Game.pre('save', function(next){
   if(!this.walls.length) {
-    for(var x = 0, x < 10, x++) {
-      for(var y = 0, y < 10, y++) {
+    for(var x = 0; x < 10; x++) {
+      for(var y = 0; y < 10; y++) {
         var wall = {};
         wall.x = x;
         wall.y = y;
