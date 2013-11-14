@@ -23,8 +23,9 @@ Game.pre('save', function(next){
         wall.y = y;
         wall.left = 0;
         wall.right = 0;
-        wall.up = 0;
-        wall.down = 0;
+        wall.top = 0;
+        wall.bottom = 0;
+        this.walls.push(wall);
       }
     }
     setInterval(function(){
@@ -36,7 +37,7 @@ Game.pre('save', function(next){
     },30000);
     }
   next();
-}
+});
 
 mongoose.model('Game', Game);
 

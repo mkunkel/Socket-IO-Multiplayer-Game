@@ -1,5 +1,5 @@
 /* global _, getValue, document, window, io */
-
+var __ = require('lodash');
 
 
 $(document).ready(initialize);
@@ -18,32 +18,55 @@ function initialize(){
 }
 
 function keypressMove(e) {
+
+  // console.log(e);
   var isArrow = _.any([37, 38, 39, 40], function(i){return i === e.which;});
+
   if(isArrow) {
     var $td = $('.player:contains(' + player + ')').closest('td');
     var x = $td.data('x');
     var y = $td.data('y');
+    var direction;
 
     switch(e.which) {
       case 37:
         // 37 left
-        x--;
+        direction = 'left';
+        if(!e.shiftKey && !e.ctrlKey) {
+          x--;
+        }
         break;
       case 38:
         // 38 up
-        y--;
+        direction = 'top';
+        if(!e.shiftKey && !e.ctrlKey) {
+          y--;
+        }
         break;
       case 39:
         // 39 right
-        x++;
+        direction = 'right';
+        if(!e.shiftKey && !e.ctrlKey) {
+          x++;
+        }
         break;
       case 40:
-        // 40 right
-        y++;
+        // 40 down
+        direction = 'bottom';
+        if(!e.shiftKey && !e.ctrlKey) {
+          y++;
+        }
 
     }
-    console.log(x + ' - ' + y);
-    socket.emit('playermoved', {game: game, player:player, x: x, y: y});
+
+    if(e.shiftKey) {
+      socket.emit('buildwall', {game: game, player:player, x: x, y: y, direction:direction});
+    } else if(e.ctrlKey) {
+      socket.emit('attackwall', {game: game, player:player, x: x, y: y, direction:direction});
+    } else {
+      socket.emit('playermoved', {game: game, player:player, x: x, y: y});
+    }
+
   } else if($('#board:visible').length && e.which !== 32) {
 
     var prey = findPrey();
@@ -54,8 +77,17 @@ function keypressMove(e) {
         socket.emit('zombieAttack', {game:game, attacker: player, prey: thisPrey});
       }else{
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
-       } 
+       }
     }
+    //var x and y are already stated above
+
+
+    // need to search the potions array for a potion with the same x&y,
+    // grab it's strength
+    // apply it's strength to player;
+    // save the player
+    // delete the potion
+    // save the game state
   }
 }
 
@@ -121,5 +153,16 @@ function socketPlayerJoined(data) {
       $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
       $player.append($outerHealth).appendTo($td);
     }
+  }
+  for(var i = 0; i < data.walls.length; i++) {
+    var $td = $('td[data-x=' + data.walls[i].x + '][data-y=' + data.walls[i].y + ']');
+    data.walls[i].left ? $td.addClass('leftWall') : $td.removeClass('leftWall');
+    data.walls[i].right ? $td.addClass('rightWall') : $td.removeClass('rightWall');
+    data.walls[i].top ? $td.addClass('topWall') : $td.removeClass('topWall');
+    data.walls[i].bottom ? $td.addClass('bottomWall') : $td.removeClass('bottomWall');
+  }
+  for(var i = 0; i < data.potions.length; i++) {
+    var $td = $('td[data-x=' + data.potions[i].x + '][data-y=' + data.potions[i].y + ']');
+    $td.append($('<div>').addClass('potion'));
   }
 }

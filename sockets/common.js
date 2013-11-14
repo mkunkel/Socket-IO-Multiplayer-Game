@@ -31,7 +31,7 @@ function socketStartGame(data){
     function(fn){fn(null,__.any(storage.game.players,function(p){return p.id===storage.player.id;}));},
     function(isFound,fn){if(!isFound){m.attachPlayer(storage.game,storage.player,fn);}else{fn(null,storage.game);}},
     function(game,fn){m.findGame(data.game,fn);},
-    function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions,fn);}
   ]);
 }
 
@@ -53,7 +53,7 @@ function socketAttack(data) {
     function(fn){m.findPlayer(data.prey,fn);},
     function(player,fn){m.takeHit(player,fn);},
     function(player,fn){m.findGame(data.game,fn);},
-    function(game,fn){m.emitPlayers(io.sockets,game.players,fn);}
+    function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
 
