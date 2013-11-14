@@ -19,9 +19,6 @@ function socketStartGame(data){
   var storage = {};
   var socket = this;
 
-
-
-
   async.waterfall([
     function(fn){m.findGame(data.game,fn);},
     function(game,fn){if(!game){m.newGame(data.game,fn);}else{fn(null,game);}},
@@ -84,13 +81,14 @@ function socketAttackWall(data) {
     function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
-function drinkPotion(){
-  // var potion = __.where(game.potions, {'x': x, 'y': y});
-  // var strength = potion.strength;
-  // player.health += strength;
-  // player.save();
-  // potions.splice(potion);
-  // game.save();
+function drinkPotion(game, player, x, y){
+  var potion = __.where(game.potions, {'x': x, 'y': y});
+  var strength = potion.strength;
+  player.health += strength;
+  player.save();
+  potions.splice(potion);
+  game.markModified('potions');
+  game.save();
 }
 
 function socketDisconnect(data){
