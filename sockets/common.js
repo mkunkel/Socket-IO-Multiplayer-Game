@@ -35,7 +35,7 @@ function socketStartGame(data){
 }
 
 function socketPlayerMoved(data){
-  console.log(data);
+  // console.log(data);
 
   async.waterfall([
     function(fn){m.findPlayer(data.player,fn);},
@@ -46,7 +46,7 @@ function socketPlayerMoved(data){
 }
 
 function socketAttack(data) {
-  console.log(data);
+  // console.log(data);
 
   async.waterfall([
     function(fn){m.findPlayer(data.prey,fn);},
@@ -78,6 +78,7 @@ function socketAttackWall(data) {
   async.waterfall([
     function(fn){m.findGame(data.game,fn);},
     function(game,fn){m.attackWall(game, data.x, data.y, data.direction,fn);},
+    function(game,fn){m.attackOppositeWall(game, data.x, data.y, data.direction,fn);},
     function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
