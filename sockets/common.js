@@ -40,8 +40,8 @@ function socketPlayerMoved(data){
   async.waterfall([
     function(fn){m.findPlayer(data.player,fn);},
     function(player,fn){m.updateCoordinates(player,data.x,data.y,fn);},
-    function(player,fn){m.findGame(data.game, player, fn);},
-    function(game, player, fn){m.drinkPotion(game, player, fn);},//***check this line***//
+    function(player,fn){m.findGame(data.game, fn);},
+    function(game, fn){m.drinkPotion(game, player, fn);},//***check this line***//
     function(game,fn){m.emitPlayers(io.sockets,game.players, game.walls, game.potions, fn);}
   ]);
 }
