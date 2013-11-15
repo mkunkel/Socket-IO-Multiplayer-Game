@@ -28,6 +28,7 @@ Game.pre('save', function(next){
         this.walls.push(wall);
       }
     }
+
     var game = this;
     setInterval(function(){
       potion = {};

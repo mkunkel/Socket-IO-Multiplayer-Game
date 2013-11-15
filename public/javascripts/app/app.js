@@ -155,6 +155,7 @@ function socketConnected(data){
 function socketPlayerJoined(data) {
   console.log(data);
   players = data.players;
+  var x, y, $td, $player, $outerHealth;
   $('td').empty()
         .removeClass('leftWall')
         .removeClass('rightWall')
@@ -162,29 +163,29 @@ function socketPlayerJoined(data) {
         .removeClass('bottomWall');
   for(var i = 0; i < data.players.length; i++) {
     if(data.players[i].health > 0) {
-      var x = data.players[i].x;
-      var y = data.players[i].y;
-      var $td = $('td[data-x=' + x + '][data-y=' + y + ']');
-      var $player = $('<div>').addClass('player');
+      x = data.players[i].x;
+      y = data.players[i].y;
+      $td = $('td[data-x=' + x + '][data-y=' + y + ']');
+      $player = $('<div>').addClass('player');
       $player.css('background-color', data.players[i].color);
       $player.text(data.players[i].name);
-      var $outerHealth = $('<div>').addClass('outerHealth');
+      $outerHealth = $('<div>').addClass('outerHealth');
       $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
       $player.append($outerHealth).appendTo($td);
     } else{
-      var x = data.players[i].x;
-      var y = data.players[i].y;
-      var $td = $('td[data-x=' + x + '][data-y=' + y + ']');
-      var $player = $('<div>').addClass('player');
+      x = data.players[i].x;
+      y = data.players[i].y;
+      $td = $('td[data-x=' + x + '][data-y=' + y + ']');
+      $player = $('<div>').addClass('player');
       $player.css('background-color', 'grey');
       $player.text(data.players[i].name);
-      var $outerHealth = $('<div>').addClass('outerHealth');
+      $outerHealth = $('<div>').addClass('outerHealth');
       $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
       $player.append($outerHealth).appendTo($td);
     }
   }
-  for(var i = 0; i < data.walls.length; i++) {
-    var $td = $('td[data-x=' + data.walls[i].x + '][data-y=' + data.walls[i].y + ']');
+  for(i = 0; i < data.walls.length; i++) {
+    $td = $('td[data-x=' + data.walls[i].x + '][data-y=' + data.walls[i].y + ']');
     if(data.walls[i].left) {
       $td.addClass('leftWall');
       if($td.prev().length){$td.prev().addClass('rightWall');}
