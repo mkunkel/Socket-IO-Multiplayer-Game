@@ -85,8 +85,8 @@ function keypressMove(e) {
       }
     }
 
-    if($('.cell').hasClass('potion') && $('.cell').data('x') === x && $('.cell').data('y') === y){
-      socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
+    if($('.cell').hasClass('potion') && $('.cell').data('x') === player.x && $('.cell').data('y') === player.y){
+      // socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
       alert('the potion condition works!');
     }
   }
