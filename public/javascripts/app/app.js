@@ -171,6 +171,7 @@ function socketPlayerJoined(data) {
       $player = $('<div>').addClass('player');
       $player.css('background-color', data.players[i].color);
       $player.text(data.players[i].name);
+      $player.append($('<img>').attr('src','../images/player.png').addClass('icon'));
       $outerHealth = $('<div>').addClass('outerHealth');
       $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
       $player.append($outerHealth).appendTo($td);
@@ -181,6 +182,7 @@ function socketPlayerJoined(data) {
       $player = $('<div>').addClass('player');
       $player.css('background-color', 'grey');
       $player.text(data.players[i].name);
+      $player.append($('<img>').attr('src','../images/zombie.png').addClass('icon'));
       $outerHealth = $('<div>').addClass('outerHealth');
       $outerHealth.append($('<div>').addClass('innerHealth').css('width', data.players[i].health + '%'));
       $player.append($outerHealth).appendTo($td);

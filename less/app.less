@@ -1,7 +1,17 @@
-@base: #ffffff;
+@base: #222;
 
 body{
   background-color: @base;
+  background: url('../images/background.png') no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
+
+.logo{
+  width: 400px;
+  margin:20px auto;
 }
 div {
   margin: 0;
@@ -13,10 +23,10 @@ div {
   border: 0;
   border-collapse: collapse;
   border-radius: 10px;
-  background-color: #555;
+  background-color: rgba(50, 50, 50, 0.5);
   td {
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
     border-radius: 10px;
     padding: 0;
     vertical-align: top;
@@ -25,9 +35,9 @@ div {
 }
 
 td.even {
-  background-color: #CCC;
+  background-color: rgba(170, 170, 170, 0.2);
   &:nth-child(2n-1) {
-    background-color: #AAA;
+    background-color: rgba(200, 200, 200, 0.2);
   }
 }
 td.odd {
@@ -72,3 +82,7 @@ td.odd {
 //   border-bottom: 4px ridge red;
 // }
 
+//styling for Icons
+.icon{
+  height: 40px;
+}

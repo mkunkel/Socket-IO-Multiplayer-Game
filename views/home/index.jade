@@ -1,6 +1,9 @@
 extends ../template/layout
 
 block content
+  .row 
+    .small-12.columns
+      img(src='../images/logo.png').logo
   .row#form
     .small-2.columns
       input#name(type= 'text', name= 'name', placeholder='game', autofocus)
