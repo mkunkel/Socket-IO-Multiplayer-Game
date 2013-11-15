@@ -36,6 +36,8 @@ Game.pre('save', function(next){
       potion.y = randomize();
       potion.strength = randomize();
       game.potions.push(potion);
+      game.markModified();
+      game.save();
       if(game.potions.length > 5){
         game.potions.pop();
       }

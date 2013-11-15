@@ -84,11 +84,11 @@ function keypressMove(e) {
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
       }
     }
-
-    if($('.cell').hasClass('potion') && $('.cell').data('x') === player.x && $('.cell').data('y') === player.y){
-      // socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
-      alert('the potion condition works!');
-    }
+    // var $currentCell = $('.player').parent();
+    // if($currentCell.hasClass('potion')){
+    //   // socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
+    //   alert('the potion condition works!');
+    // }
   }
 }
 
