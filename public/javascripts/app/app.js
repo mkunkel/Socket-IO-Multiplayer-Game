@@ -36,28 +36,28 @@ function keypressMove(e) {
       case 37:
         // 37 left
         direction = 'left';
-        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('leftWall')) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('leftWall') && x > 0) {
           x--;
         }
         break;
       case 38:
         // 38 up
         direction = 'top';
-        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('topWall')) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('topWall') && y > 0) {
           y--;
         }
         break;
       case 39:
         // 39 right
         direction = 'right';
-        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('rightWall')) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('rightWall') && x < 9) {
           x++;
         }
         break;
       case 40:
         // 40 down
         direction = 'bottom';
-        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('bottomWall')) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('bottomWall') && y < 9) {
           y++;
         }
 
@@ -153,7 +153,7 @@ function socketConnected(data){
 }
 
 function socketPlayerJoined(data) {
-  // console.log('received');
+  console.log(data);
   players = data.players;
   $('td').empty()
         .removeClass('leftWall')
