@@ -21,38 +21,43 @@ function keypressMove(e) {
   var isArrow = _.any([37, 38, 39, 40], function(i){return i === e.which;});
   var x;
   var y;
+  var oldX;
+  var oldY;
+
   if(isArrow) {
     var $td = $('.player:contains(' + player + ')').closest('td');
     x = $td.data('x');
     y = $td.data('y');
+    oldX = x;
+    oldY = y;
     var direction;
 
     switch(e.which) {
       case 37:
         // 37 left
         direction = 'left';
-        if(!e.shiftKey && !e.ctrlKey) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('leftWall')) {
           x--;
         }
         break;
       case 38:
         // 38 up
         direction = 'top';
-        if(!e.shiftKey && !e.ctrlKey) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('topWall')) {
           y--;
         }
         break;
       case 39:
         // 39 right
         direction = 'right';
-        if(!e.shiftKey && !e.ctrlKey) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('rightWall')) {
           x++;
         }
         break;
       case 40:
         // 40 down
         direction = 'bottom';
-        if(!e.shiftKey && !e.ctrlKey) {
+        if(!e.shiftKey && !e.ctrlKey && !$td.hasClass('bottomWall')) {
           y++;
         }
 
@@ -62,7 +67,8 @@ function keypressMove(e) {
       socket.emit('buildwall', {game: game, player:player, x: x, y: y, direction:direction});
     } else if(e.ctrlKey) {
       socket.emit('attackwall', {game: game, player:player, x: x, y: y, direction:direction});
-    } else {
+      attackOppositeWall(game, player, x, y, direction);
+    } else if(oldX !== x || oldY !== y) {
       socket.emit('playermoved', {game: game, player:player, x: x, y: y});
     }
 
@@ -83,6 +89,30 @@ function keypressMove(e) {
       socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
       alert('the potion condition works!');
     }
+  }
+}
+
+function attackOppositeWall(game, player, x, y, direction) {
+  switch(direction) {
+    case 'left':
+      direction = 'right';
+      x--;
+      break;
+    case 'right':
+      direction = 'left';
+      x++;
+      break;
+    case 'top':
+      direction = 'bottom';
+      y--;
+      break;
+    case 'bottom':
+      direction = 'top';
+      y++;
+  }
+  if($('td[data-x=' + x + '][data-y=' + y + ']').length) {
+    socket.emit('attackwall', {game: game, player:player, x: x, y: y, direction:direction});
+    console.log(x + ', ' + y);
   }
 }
 
@@ -125,7 +155,11 @@ function socketConnected(data){
 function socketPlayerJoined(data) {
   // console.log('received');
   players = data.players;
-  $('td').empty();
+  $('td').empty()
+        .removeClass('leftWall')
+        .removeClass('rightWall')
+        .removeClass('topWall')
+        .removeClass('bottomWall');
   for(var i = 0; i < data.players.length; i++) {
     if(data.players[i].health > 0) {
       var x = data.players[i].x;
@@ -151,10 +185,27 @@ function socketPlayerJoined(data) {
   }
   for(var i = 0; i < data.walls.length; i++) {
     var $td = $('td[data-x=' + data.walls[i].x + '][data-y=' + data.walls[i].y + ']');
-    data.walls[i].left ? $td.addClass('leftWall') : $td.removeClass('leftWall');
-    data.walls[i].right ? $td.addClass('rightWall') : $td.removeClass('rightWall');
-    data.walls[i].top ? $td.addClass('topWall') : $td.removeClass('topWall');
-    data.walls[i].bottom ? $td.addClass('bottomWall') : $td.removeClass('bottomWall');
+    if(data.walls[i].left) {
+      $td.addClass('leftWall');
+      if($td.prev().length){$td.prev().addClass('rightWall');}
+    }
+    if (data.walls[i].right) {
+      $td.addClass('rightWall');
+      if($td.next().length){$td.next().addClass('leftWall');}
+    }
+
+    if(data.walls[i].top) {
+      $td.addClass('topWall');
+      if($('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y - 1) + ']').length) {
+        $('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y - 1) + ']').addClass('bottomWall');
+      }
+    }
+    if(data.walls[i].bottom) {
+      $td.addClass('bottomWall');
+      if($('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y + 1) + ']').length) {
+        $('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y + 1) + ']').addClass('topWall');
+      }
+    }
   }
   for(var i = 0; i < data.potions.length; i++) {
     var $td = $('td[data-x=' + data.potions[i].x + '][data-y=' + data.potions[i].y + ']');
