@@ -16,7 +16,7 @@ function initialize(){
 }
 
 function keypressMove(e) {
-
+  if(e.which === 13 || e.which === 32) {return false;}
   // console.log(e);
   var isArrow = _.any([37, 38, 39, 40], function(i){return i === e.which;});
   var x;
@@ -160,7 +160,8 @@ function socketPlayerJoined(data) {
         .removeClass('leftWall')
         .removeClass('rightWall')
         .removeClass('topWall')
-        .removeClass('bottomWall');
+        .removeClass('bottomWall')
+        .css('border', 'none');
   for(var i = 0; i < data.players.length; i++) {
     if(data.players[i].health > 0) {
       x = data.players[i].x;
@@ -187,22 +188,22 @@ function socketPlayerJoined(data) {
   for(i = 0; i < data.walls.length; i++) {
     $td = $('td[data-x=' + data.walls[i].x + '][data-y=' + data.walls[i].y + ']');
     if(data.walls[i].left) {
-      $td.addClass('leftWall');
+      $td.addClass('leftWall').css('border-left', getBorderColor(data.walls[i].left));
       if($td.prev().length){$td.prev().addClass('rightWall');}
     }
     if (data.walls[i].right) {
-      $td.addClass('rightWall');
+      $td.addClass('rightWall').css('border-right', getBorderColor(data.walls[i].right));
       if($td.next().length){$td.next().addClass('leftWall');}
     }
 
     if(data.walls[i].top) {
-      $td.addClass('topWall');
+      $td.addClass('topWall').css('border-top', getBorderColor(data.walls[i].top));
       if($('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y - 1) + ']').length) {
         $('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y - 1) + ']').addClass('bottomWall');
       }
     }
     if(data.walls[i].bottom) {
-      $td.addClass('bottomWall');
+      $td.addClass('bottomWall').css('border-bottom', getBorderColor(data.walls[i].bottom));
       if($('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y + 1) + ']').length) {
         $('td[data-x=' + data.walls[i].x + '][data-y=' + (data.walls[i].y + 1) + ']').addClass('topWall');
       }
@@ -212,4 +213,9 @@ function socketPlayerJoined(data) {
     var $td = $('td[data-x=' + data.potions[i].x + '][data-y=' + data.potions[i].y + ']');
     $td.append($('<div>').addClass('potion'));
   }
+}
+
+function getBorderColor(health) {
+  health = health / 100;
+  return '4px ridge rgba(255, 0, 0, ' + health + ')';
 }
