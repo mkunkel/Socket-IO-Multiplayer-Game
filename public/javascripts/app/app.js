@@ -211,7 +211,7 @@ function socketPlayerJoined(data) {
   }
   for(var i = 0; i < data.potions.length; i++) {
     var $td = $('td[data-x=' + data.potions[i].x + '][data-y=' + data.potions[i].y + ']');
-    $td.append($('<div>').addClass('potion'));
+    $td.append($('<img src="images/potion.png"/>').addClass('potion'));
   }
 }
 
