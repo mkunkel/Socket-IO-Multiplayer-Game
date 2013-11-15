@@ -161,6 +161,7 @@ function socketPlayerJoined(data) {
         .removeClass('rightWall')
         .removeClass('topWall')
         .removeClass('bottomWall')
+        .removeClass('potion')
         .css('border', 'none');
   for(var i = 0; i < data.players.length; i++) {
     if(data.players[i].health > 0) {
@@ -211,7 +212,7 @@ function socketPlayerJoined(data) {
   }
   for(var i = 0; i < data.potions.length; i++) {
     var $td = $('td[data-x=' + data.potions[i].x + '][data-y=' + data.potions[i].y + ']');
-    $td.append($('<img src="images/potion.png"/>').addClass('potion'));
+    $td.addClass('potion');
   }
 }
 
