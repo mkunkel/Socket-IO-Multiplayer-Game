@@ -85,11 +85,11 @@ function keypressMove(e) {
         socket.emit('attack', {game: game, attacker: player, prey: thisPrey});
       }
     }
-
-    if($('.cell').hasClass('potion') && $('.cell').data('x') === x && $('.cell').data('y') === y){
-      socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
-      alert('the potion condition works!');
-    }
+    // var $currentCell = $('.player').parent();
+    // if($currentCell.hasClass('potion')){
+    //   // socket.emit('drinkPotion', {game: game, player: player, x:x, y:y});
+    //   alert('the potion condition works!');
+    // }
   }
 }
 
@@ -162,6 +162,7 @@ function socketPlayerJoined(data) {
         .removeClass('rightWall')
         .removeClass('topWall')
         .removeClass('bottomWall')
+        .removeClass('potion')
         .css('border', 'none');
   for(var i = 0; i < data.players.length; i++) {
     if(data.players[i].health > 0) {
@@ -214,7 +215,7 @@ function socketPlayerJoined(data) {
   }
   for(var i = 0; i < data.potions.length; i++) {
     var $td = $('td[data-x=' + data.potions[i].x + '][data-y=' + data.potions[i].y + ']');
-    $td.append($('<div>').addClass('potion'));
+    $td.addClass('potion');
   }
 }
 

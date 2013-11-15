@@ -30,7 +30,7 @@ Game.pre('save', function(next){
     }
 
     var game = this;
-    setInterval(function(){
+    function createPotion(){
       var potion = {};
       potion.x = randomize();
       potion.y = randomize();
@@ -38,6 +38,18 @@ Game.pre('save', function(next){
       game.potions.push(potion);
       game.markModified();
       game.save();
+      if(game.potions.length > 5){
+        game.potions.pop();
+      }
+      game.markModified();
+      game.save();
+    }
+    //starts the board with two potions:
+    createPotion();
+    createPotion();
+    //adds a potion to the board every 30s:
+    setInterval(function(){
+      createPotion();
     },30000);
   }
   next();
